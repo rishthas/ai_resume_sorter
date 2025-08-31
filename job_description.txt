@@ -1,0 +1,33 @@
+We’re looking for a Python Developer eager to grow across web, mobile, and automation technologies. You’ll work closely with our team to build solutions that automate tasks, improve digital performance, and adapt to evolving technical needs.
+
+Key Responsibilities:
+
+    Write Python scripts to automate data-driven and operational tasks.
+
+    Assist in building backend systems using Django, Flask, or FastAPI.
+
+    Contribute to frontend development using ReactJS and mobile apps using Flutter.
+
+    Support testing through automated test scripts and frameworks.
+
+    Apply basic SEO techniques and monitor site performance with tools like Google Analytics.
+
+    Work collaboratively across teams to integrate automation in business processes.
+
+    Show a strong willingness to learn and adapt to new technologies.
+
+Qualifications:
+
+    Bachelor's in Computer Science, IT, or a related field.
+
+    Good understanding of Python programming.
+
+    Familiarity with web frameworks (Django/Flask/FastAPI).
+
+    Basic experience in ReactJS and Flutter.
+
+    Exposure to testing automation tools like PyTest or Selenium is a plus.
+
+    Awareness of SEO principles and performance tracking tools.
+
+    Eagerness to learn, take feedback, and grow technically.
