@@ -1,0 +1,153 @@
+{% extends 'resume_app/base.html' %}
+{% load resume_filters %}
+
+{% block title %}Results - Resume Sorter{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="text-center mb-4">
+            <h1 class="display-5">
+                <i class="bi bi-trophy"></i> Resume Ranking Results
+            </h1>
+            <p class="text-muted">Session #{{ session.id }} - {{ session.created_at|date:"M d, Y H:i" }}</p>
+        </div>
+
+        {% if criteria %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-clipboard-check"></i> Job Requirements Analysis
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h3 class="text-primary">{{ criteria.total_max_score|default:"100" }}</h3>
+                            <p class="mb-0 text-muted small">Total Points</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h3 class="text-success">{{ results|length }}</h3>
+                            <p class="mb-0 text-muted small">Resumes Processed</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3 bg-light rounded">
+                            <h3 class="text-info">{{ criteria.required_skills|length|default:"0" }}</h3>
+                            <p class="mb-0 text-muted small">Required Skills</p>
+                        </div>
+                    </div>
+                </div>
+
+                {% if criteria.required_skills %}
+                <div class="mt-3">
+                    <h6><i class="bi bi-star-fill text-warning"></i> Required Skills:</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for skill in criteria.required_skills %}
+                            <span class="badge bg-primary">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if criteria.bonus_skills %}
+                <div class="mt-3">
+                    <h6><i class="bi bi-plus-circle text-success"></i> Bonus Skills:</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for skill in criteria.bonus_skills %}
+                            <span class="badge bg-success">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-list-ol"></i> Ranked Candidates</span>
+                <a href="{% url 'home' %}" class="btn btn-sm btn-light">
+                    <i class="bi bi-plus-circle"></i> New Analysis
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 80px;">Rank</th>
+                                <th>Candidate</th>
+                                <th>Contact</th>
+                                <th style="width: 200px;">Score</th>
+                                <th>Summary</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>
+                                    {% if result.Rank == 1 %}
+                                        <span class="badge rank-badge rank-1">
+                                            <i class="bi bi-trophy-fill"></i> #{{ result.Rank }}
+                                        </span>
+                                    {% elif result.Rank == 2 %}
+                                        <span class="badge rank-badge rank-2">
+                                            <i class="bi bi-award-fill"></i> #{{ result.Rank }}
+                                        </span>
+                                    {% elif result.Rank == 3 %}
+                                        <span class="badge rank-badge rank-3">
+                                            <i class="bi bi-award"></i> #{{ result.Rank }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary rank-badge">
+                                            #{{ result.Rank }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ result|get_item:"Candidate Name" }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ result|get_item:"File Name" }}</small>
+                                </td>
+                                <td>
+                                    <small>
+                                        {% if result.Email != "Not Found" %}
+                                            <i class="bi bi-envelope"></i> {{ result.Email }}<br>
+                                        {% endif %}
+                                        {% if result.Phone != "Not Found" %}
+                                            <i class="bi bi-telephone"></i> {{ result.Phone }}
+                                        {% endif %}
+                                        {% if result.Email == "Not Found" and result.Phone == "Not Found" %}
+                                            <span class="text-muted">Contact info not found</span>
+                                        {% endif %}
+                                    </small>
+                                </td>
+                                <td>
+                                    <div class="score-bar" style="width: {{ result|get_item:"Total Score" }}%;">
+                                        <span class="score-text">{{ result|get_item:"Total Score" }}/100</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ result.Summary|truncatewords:20 }}</small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                <i class="bi bi-arrow-left-circle"></i> Back to Home
+            </a>
+            <a href="{% url 'session_list' %}" class="btn btn-outline-secondary btn-lg ms-2">
+                <i class="bi bi-clock-history"></i> View History
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
