@@ -1,0 +1,127 @@
+{% extends 'resume_app/base.html' %}
+
+{% block title %}Upload Resumes - Resume Sorter{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="text-center mb-4">
+            <h1 class="display-4">
+                <i class="bi bi-file-earmark-text"></i> AI Resume Sorter
+            </h1>
+            <p class="lead text-muted">
+                Upload resumes and job description to get intelligent rankings powered by AI
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-cloud-upload"></i> Upload Resumes
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" id="uploadForm">
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <label for="{{ form.job_description.id_for_label }}" class="form-label">
+                            <i class="bi bi-file-text"></i> {{ form.job_description.label }}
+                        </label>
+                        {{ form.job_description }}
+                        {% if form.job_description.errors %}
+                            <div class="text-danger mt-1">
+                                {{ form.job_description.errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">{{ form.job_description.help_text }}</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.zip_file.id_for_label }}" class="form-label">
+                            <i class="bi bi-file-zip"></i> {{ form.zip_file.label }}
+                        </label>
+                        {{ form.zip_file }}
+                        {% if form.zip_file.errors %}
+                            <div class="text-danger mt-1">
+                                {{ form.zip_file.errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">{{ form.zip_file.help_text }}</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <i class="bi bi-cpu"></i> Process Resumes
+                        </button>
+                    </div>
+
+                    <div class="alert alert-info mt-3">
+                        <i class="bi bi-info-circle"></i> <strong>Note:</strong>
+                        Processing may take a few minutes depending on the number of resumes.
+                        Please be patient while AI analyzes the resumes.
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if recent_sessions %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <i class="bi bi-clock-history"></i> Recent Sessions
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for session in recent_sessions %}
+                        <a href="{% url 'results' session.id %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">
+                                    <i class="bi bi-folder"></i> Session #{{ session.id }}
+                                </h6>
+                                <small class="text-muted">{{ session.created_at|date:"M d, Y H:i" }}</small>
+                            </div>
+                            <p class="mb-1 small text-muted">
+                                {{ session.get_results_count }} resumes processed
+                            </p>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <i class="bi bi-question-circle"></i> How It Works
+            </div>
+            <div class="card-body">
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item">
+                        <strong>Prepare Job Description:</strong> Write a detailed job description including required skills, preferred skills, and experience requirements.
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Prepare Resumes:</strong> Collect all candidate resumes (PDF, DOCX, or TXT format) and create a ZIP file containing them.
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Upload:</strong> Upload the job description and ZIP file using the form above.
+                    </li>
+                    <li class="list-group-item">
+                        <strong>AI Processing:</strong> Our AI will analyze each resume against the job requirements and provide scores.
+                    </li>
+                    <li class="list-group-item">
+                        <strong>View Results:</strong> Get ranked results with detailed scoring and candidate information.
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', function() {
+        var submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+    });
+</script>
+{% endblock %}
