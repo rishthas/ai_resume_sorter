@@ -1,0 +1,52 @@
+{
+  "name": "AI Resume Sorter",
+  "description": "Django web application for AI-powered resume ranking and analysis",
+  "repository": "https://github.com/rishthas/ai_resume_sorter",
+  "keywords": ["django", "python", "ai", "resume", "openai", "recruitment"],
+  "image": "heroku/python",
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "addons": [
+    {
+      "plan": "heroku-postgresql:essential-0"
+    }
+  ],
+  "env": {
+    "OPENAI_API_KEY": {
+      "description": "Your OpenAI API key from platform.openai.com",
+      "required": true
+    },
+    "SECRET_KEY": {
+      "description": "Django secret key for cryptographic signing",
+      "generator": "secret",
+      "required": true
+    },
+    "DEBUG": {
+      "description": "Django debug mode (should be False in production)",
+      "value": "False",
+      "required": true
+    },
+    "MODEL": {
+      "description": "OpenAI model to use for resume analysis",
+      "value": "gpt-3.5-turbo",
+      "required": false
+    },
+    "ALLOWED_HOSTS": {
+      "description": "Comma-separated list of allowed hosts",
+      "value": ".herokuapp.com",
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  },
+  "scripts": {
+    "postdeploy": "python manage.py migrate && python manage.py collectstatic --noinput"
+  }
+}
