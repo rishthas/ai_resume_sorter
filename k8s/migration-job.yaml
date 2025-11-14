@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: resume-sorter-migrate
+  namespace: resume-sorter
+spec:
+  template:
+    metadata:
+      labels:
+        app: resume-sorter-migrate
+    spec:
+      containers:
+      - name: migrate
+        image: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/resume-sorter:latest
+        command: ["python", "manage.py", "migrate", "--noinput"]
+        env:
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: resume-sorter-secrets
+              key: SECRET_KEY
+
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: resume-sorter-secrets
+              key: DATABASE_URL
+
+        - name: DEBUG
+          value: "False"
+
+      restartPolicy: OnFailure
+  backoffLimit: 3

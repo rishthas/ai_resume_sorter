@@ -63,6 +63,10 @@ db.sqlite3-journal
 staticfiles/
 media/
 
+# Kubernetes secrets (NEVER commit these!)
+k8s/secrets.yaml
+*.bak
+
 # Flask stuff:
 instance/
 .webassets-cache

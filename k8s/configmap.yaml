@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: resume-sorter-config
+  namespace: resume-sorter
+data:
+  # Django settings
+  DEBUG: "False"
+  ALLOWED_HOSTS: "*.amazonaws.com,*.elb.amazonaws.com,resume-sorter.yourdomain.com"
+
+  # OpenAI settings
+  MODEL: "gpt-3.5-turbo"
+
+  # Database settings (non-sensitive)
+  # Actual connection details come from secrets
+  DB_ENGINE: "django.db.backends.postgresql"
+  DB_PORT: "5432"
